@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "slug": "ember-garage",
+  "status": "preview",
+  "timezone": "Asia/Yekaterinburg",
+  "brand": {
+    "name": "EMBER Garage",
+    "shortName": "EMBER",
+    "description": "Городской автосервис для понятного обслуживания: диагностика, регламентные работы и честный статус ремонта.",
+    "accent": "#FF6B35",
+    "logo": "images/logo.svg",
+    "hero": "images/hero.svg"
+  },
+  "contact": {
+    "phone": "+7 900 000-00-02",
+    "address": "Екатеринбург, улица Монтажников, 24",
+    "directionsUrl": "https://www.openstreetmap.org/search?query=Екатеринбург%20Монтажников%2024"
+  },
+  "booking": {
+    "slotIntervalMinutes": 30,
+    "minimumLeadMinutes": 60,
+    "horizonDays": 30,
+    "cancellationHours": 6
+  },
+  "hours": [
+    { "weekday": 0, "closed": true },
+    { "weekday": 1, "closed": false, "opensAt": "08:00", "lastArrivalAt": "19:00" },
+    { "weekday": 2, "closed": false, "opensAt": "08:00", "lastArrivalAt": "19:00" },
+    { "weekday": 3, "closed": false, "opensAt": "08:00", "lastArrivalAt": "19:00" },
+    { "weekday": 4, "closed": false, "opensAt": "08:00", "lastArrivalAt": "19:00" },
+    { "weekday": 5, "closed": false, "opensAt": "08:00", "lastArrivalAt": "19:00" },
+    { "weekday": 6, "closed": false, "opensAt": "09:00", "lastArrivalAt": "16:00" }
+  ],
+  "resources": [
+    { "key": "lift-1", "name": "Подъёмник 1", "kind": "lift" },
+    { "key": "lift-2", "name": "Подъёмник 2", "kind": "lift" },
+    { "key": "diagnostic-bay", "name": "Диагностический пост", "kind": "bay" }
+  ],
+  "services": [
+    {
+      "key": "diagnostics",
+      "name": "Компьютерная диагностика",
+      "description": "Считывание ошибок, проверка параметров и понятное заключение мастера.",
+      "priceCents": 250000,
+      "durationMinutes": 60,
+      "bufferMinutes": 15,
+      "resourceKeys": ["diagnostic-bay"],
+      "featured": true
+    },
+    {
+      "key": "oil-service",
+      "name": "Замена масла и фильтров",
+      "description": "Регламентная замена с проверкой уровней и состояния расходных материалов.",
+      "priceCents": 450000,
+      "durationMinutes": 90,
+      "bufferMinutes": 15,
+      "resourceKeys": ["lift-1", "lift-2"],
+      "featured": true
+    },
+    {
+      "key": "brake-service",
+      "name": "Обслуживание тормозов",
+      "description": "Осмотр, очистка и замена согласованных элементов тормозной системы.",
+      "priceCents": 900000,
+      "durationMinutes": 180,
+      "bufferMinutes": 30,
+      "resourceKeys": ["lift-1", "lift-2"],
+      "featured": false
+    }
+  ],
+  "infoCards": [
+    { "key": "estimate", "title": "Смета до ремонта", "text": "Сначала диагностика и согласование, затем работы без неожиданных пунктов." },
+    { "key": "parts", "title": "Выбор запчастей", "text": "Предлагаем варианты по бюджету и объясняем разницу в ресурсе." },
+    { "key": "status", "title": "Статус без звонков", "text": "Владелец отмечает приёмку и готовность автомобиля прямо в записи." }
+  ],
+  "gallery": [
+    { "key": "ember-lift", "image": "images/work-1.svg", "caption": "Проверка автомобиля на подъёмнике" },
+    { "key": "ember-diagnostics", "image": "images/work-2.svg", "caption": "Диагностика электронных систем" },
+    { "key": "ember-brakes", "image": "images/work-3.svg", "caption": "Обслуживание тормозных механизмов" }
+  ],
+  "pwa": {
+    "name": "EMBER Garage — запись",
+    "shortName": "EMBER",
+    "description": "Онлайн-запись и статус обслуживания в EMBER Garage"
+  }
+}

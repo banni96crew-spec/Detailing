@@ -1,21 +1,7 @@
-# shadcn/ui monorepo template
+# Платформа онлайн-записи
 
-This is a Next.js monorepo template with shadcn/ui.
+Многопользовательское PWA для автосервисов и детейлинг-студий. Один интерфейс и один проект Supabase обслуживают независимые студии по адресам `/s/{slug}/` и `/s/{slug}/owner/`.
 
-## Adding components
+Конфигурация новой студии находится в `tenants/{slug}/business.json`, изображения — рядом в `images`. Во время публикации конфигурация переносится в базу, которая становится рабочим источником данных.
 
-To add components to your app, run the following command at the root of your `web` app:
-
-```bash
-pnpm dlx shadcn@latest add button -c apps/web
-```
-
-This will place the ui components in the `packages/ui/src/components` directory.
-
-## Using components
-
-To use the components in your app, import them from the `ui` package.
-
-```tsx
-import { Button } from "@workspace/ui/components/button";
-```
+Начало работы: [SETUP.md](./SETUP.md). Быстрое переодевание: [CLONE-IN-6-MINUTES.md](./CLONE-IN-6-MINUTES.md). Фактические проверки: [ACCEPTANCE.md](./ACCEPTANCE.md).

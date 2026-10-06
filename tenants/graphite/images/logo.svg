@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">GRAPHITE</title>
+  <rect width="512" height="512" rx="112" fill="#090b0f"/>
+  <path d="M104 282c0-91 66-158 158-158 56 0 100 21 130 57l-58 50c-18-20-41-31-70-31-47 0-80 34-80 82 0 49 33 83 82 83 22 0 41-5 57-17v-35h-72v-70h151v144c-39 35-87 53-143 53-91 0-155-66-155-158Z" fill="#4690FF"/>
+</svg>

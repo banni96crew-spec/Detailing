@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "slug": "graphite",
+  "status": "preview",
+  "timezone": "Europe/Moscow",
+  "brand": {
+    "name": "GRAPHITE Detailing",
+    "shortName": "GRAPHITE",
+    "description": "Спокойный детейлинг без конвейера: фиксируем состояние автомобиля, согласуем работы и показываем результат.",
+    "accent": "#4690FF",
+    "logo": "images/logo.svg",
+    "hero": "images/hero.svg"
+  },
+  "contact": {
+    "phone": "+7 900 000-00-01",
+    "address": "Москва, Береговой проезд, 5",
+    "directionsUrl": "https://www.openstreetmap.org/search?query=Москва%20Береговой%20проезд%205"
+  },
+  "booking": {
+    "slotIntervalMinutes": 30,
+    "minimumLeadMinutes": 120,
+    "horizonDays": 45,
+    "cancellationHours": 12
+  },
+  "hours": [
+    { "weekday": 0, "closed": false, "opensAt": "10:00", "lastArrivalAt": "18:00" },
+    { "weekday": 1, "closed": false, "opensAt": "09:00", "lastArrivalAt": "20:00" },
+    { "weekday": 2, "closed": false, "opensAt": "09:00", "lastArrivalAt": "20:00" },
+    { "weekday": 3, "closed": false, "opensAt": "09:00", "lastArrivalAt": "20:00" },
+    { "weekday": 4, "closed": false, "opensAt": "09:00", "lastArrivalAt": "20:00" },
+    { "weekday": 5, "closed": false, "opensAt": "09:00", "lastArrivalAt": "20:00" },
+    { "weekday": 6, "closed": false, "opensAt": "10:00", "lastArrivalAt": "18:00" }
+  ],
+  "resources": [
+    { "key": "detailing-bay-1", "name": "Детейлинг-бокс 1", "kind": "bay" },
+    { "key": "detailing-bay-2", "name": "Детейлинг-бокс 2", "kind": "bay" }
+  ],
+  "services": [
+    {
+      "key": "deep-wash",
+      "name": "Детейлинг-мойка",
+      "description": "Тщательная мойка кузова, дисков, проёмов и безопасная сушка.",
+      "priceCents": 650000,
+      "durationMinutes": 180,
+      "bufferMinutes": 30,
+      "resourceKeys": ["detailing-bay-1", "detailing-bay-2"],
+      "featured": true
+    },
+    {
+      "key": "polishing",
+      "name": "Восстановительная полировка",
+      "description": "Диагностика лака и поэтапная полировка с контролем толщины покрытия.",
+      "priceCents": 2800000,
+      "durationMinutes": 720,
+      "bufferMinutes": 60,
+      "resourceKeys": ["detailing-bay-1", "detailing-bay-2"],
+      "featured": true
+    },
+    {
+      "key": "ceramic",
+      "name": "Керамическая защита",
+      "description": "Подготовка кузова и нанесение защитного состава с выдержкой в боксе.",
+      "priceCents": 4200000,
+      "durationMinutes": 2160,
+      "bufferMinutes": 120,
+      "resourceKeys": ["detailing-bay-1"],
+      "featured": true
+    }
+  ],
+  "infoCards": [
+    { "key": "inspection", "title": "Осмотр до начала", "text": "Фиксируем состояние кузова и заранее согласуем каждую дополнительную работу." },
+    { "key": "materials", "title": "Проверенные составы", "text": "Подбираем химию и защиту под покрытие, состояние и режим эксплуатации." },
+    { "key": "result", "title": "Результат в деталях", "text": "Показываем выполненные этапы и даём понятные рекомендации по уходу." }
+  ],
+  "gallery": [
+    { "key": "graphite-coupe", "image": "images/work-1.svg", "caption": "Полировка и защита тёмного кузова" },
+    { "key": "graphite-suv", "image": "images/work-2.svg", "caption": "Комплексная подготовка внедорожника" },
+    { "key": "graphite-interior", "image": "images/work-3.svg", "caption": "Бережная работа с салоном" }
+  ],
+  "pwa": {
+    "name": "GRAPHITE Detailing — запись",
+    "shortName": "GRAPHITE",
+    "description": "Услуги, свободное время и запись в GRAPHITE Detailing"
+  }
+}

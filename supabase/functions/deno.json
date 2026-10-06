@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "lib": ["deno.window", "dom", "dom.iterable"]
+  },
+  "imports": {
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@2.57.4",
+    "openai": "npm:openai@7.28.0",
+    "web-push": "npm:web-push@3.6.7",
+    "zod": "npm:zod@4.1.11"
+  }
+}
