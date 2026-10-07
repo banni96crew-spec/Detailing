@@ -146,6 +146,234 @@
 
 @layer app {
   html {
+    background:
+      linear-gradient(color-mix(in srgb, var(--color-accent) 8%, transparent) var(--border-width), transparent var(--border-width)),
+      linear-gradient(90deg, color-mix(in srgb, var(--color-accent) 8%, transparent) var(--border-width), transparent var(--border-width)),
+      color-mix(in srgb, var(--color-background-body) 94%, black);
+    background-size: var(--spacing-10) var(--spacing-10);
+  }
+
+  body {
+    overflow-x: hidden;
+    background:
+      radial-gradient(circle at 82% 18%, color-mix(in srgb, var(--color-accent) 16%, transparent), transparent 34%),
+      radial-gradient(circle at 18% 72%, color-mix(in srgb, var(--color-accent) 8%, transparent), transparent 30%);
+  }
+
+  .astryx-app-shell {
+    width: min(100%, calc(var(--spacing-10) * 20));
+    min-height: 100dvh;
+    margin-inline: auto;
+    overflow: clip;
+    background:
+      radial-gradient(circle at 90% 28%, color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 30%),
+      linear-gradient(155deg, color-mix(in srgb, var(--color-background-surface) 92%, transparent), var(--color-background-body));
+    box-shadow: var(--shadow-high);
+  }
+
+  .preview-banner {
+    padding: var(--spacing-2) var(--spacing-4);
+    color: var(--color-text-secondary);
+    background: color-mix(in srgb, var(--color-background-surface) 84%, transparent);
+    border-block-end: var(--border-width) solid var(--color-border);
+    backdrop-filter: blur(var(--spacing-3));
+  }
+
+  .brand-header {
+    margin-inline: var(--spacing-4);
+    padding-block: var(--spacing-4);
+    border-block-end: var(--border-width) solid var(--color-border);
+  }
+
+  .brand-mark {
+    width: var(--spacing-10);
+    height: var(--spacing-10);
+    object-fit: contain;
+    padding: var(--spacing-2);
+    background: color-mix(in srgb, var(--color-background-muted) 72%, transparent);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-low);
+  }
+
+  .brand-header .astryx-button {
+    width: var(--spacing-10);
+    min-width: var(--spacing-10);
+    height: var(--spacing-10);
+    min-height: var(--spacing-10);
+    padding: 0;
+  }
+
+  .brand-header .astryx-button svg {
+    width: var(--spacing-7);
+    height: var(--spacing-7);
+  }
+
+  .astryx-section {
+    width: min(100%, calc(var(--spacing-10) * 18));
+    margin-inline: auto;
+  }
+
+  h1 {
+    font-style: italic;
+    letter-spacing: -0.035em;
+  }
+
+  .hero {
+    min-height: min(66dvh, calc(var(--spacing-10) * 13));
+    margin: var(--spacing-4);
+    background: var(--color-background-surface);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-container);
+    box-shadow: var(--shadow-high);
+  }
+
+  .hero img {
+    opacity: 0.48;
+    filter: saturate(0.72) contrast(1.08);
+  }
+
+  .hero::after {
+    background:
+      radial-gradient(circle at 88% 18%, color-mix(in srgb, var(--color-accent) 26%, transparent), transparent 34%),
+      linear-gradient(to bottom, color-mix(in srgb, var(--color-background-body) 8%, transparent), var(--color-background-body) 94%);
+  }
+
+  .hero-copy {
+    gap: var(--spacing-3);
+    padding: var(--spacing-6);
+  }
+
+  .hero-booking-glass,
+  .booking-summary,
+  .info-grid li,
+  .gallery-grid figure,
+  .owner-stats section {
+    background: linear-gradient(145deg, color-mix(in srgb, var(--color-background-wash) 90%, transparent), color-mix(in srgb, var(--color-background-surface) 82%, transparent));
+    border: var(--border-width) solid var(--color-border-emphasized);
+    box-shadow: inset 0 var(--border-width) 0 color-mix(in srgb, var(--color-text-primary) 8%, transparent), var(--shadow-low);
+    backdrop-filter: blur(var(--spacing-3));
+  }
+
+  .service-list {
+    gap: var(--spacing-3);
+  }
+
+  .service-row {
+    padding: var(--spacing-4);
+    background: linear-gradient(145deg, color-mix(in srgb, var(--color-background-muted) 88%, transparent), color-mix(in srgb, var(--color-background-surface) 86%, transparent));
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-container);
+    box-shadow: var(--shadow-low);
+  }
+
+  .service-image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    margin-block-end: var(--spacing-4);
+    object-fit: cover;
+    border-radius: var(--radius-element);
+  }
+
+  .service-row .astryx-button[data-variant="secondary"] {
+    margin-block-start: var(--spacing-3);
+    background: color-mix(in srgb, var(--color-accent) 18%, var(--color-background-surface));
+    border-color: color-mix(in srgb, var(--color-accent) 48%, var(--color-border-emphasized));
+  }
+
+  .info-grid li,
+  .gallery-grid figure,
+  .booking-summary,
+  .owner-stats section {
+    border-radius: var(--radius-container);
+  }
+
+  .owner-stats {
+    gap: var(--spacing-3);
+  }
+
+  .owner-stats section {
+    min-height: calc(var(--spacing-10) * 3);
+    padding: var(--spacing-4);
+  }
+
+  .owner-header {
+    padding-block: var(--spacing-3);
+    border-block-end: var(--border-width) solid var(--color-border);
+  }
+
+  .astryx-button {
+    min-height: var(--size-control-lg);
+    border-radius: var(--radius-full);
+    transition: transform var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard);
+  }
+
+  .astryx-button[data-variant="primary"] {
+    color: var(--color-on-accent);
+    box-shadow: 0 var(--spacing-2) var(--spacing-8) color-mix(in srgb, var(--color-accent) 26%, transparent);
+  }
+
+  .astryx-button[data-variant="secondary"] {
+    background: linear-gradient(145deg, color-mix(in srgb, var(--color-background-muted) 90%, transparent), color-mix(in srgb, var(--color-background-surface) 88%, transparent));
+    border-color: var(--color-border-emphasized);
+  }
+
+  .astryx-button:active {
+    transform: scale(0.98);
+  }
+
+  .bottom-nav {
+    inset-inline: max(var(--spacing-3), calc((100vw - calc(var(--spacing-10) * 18)) / 2));
+    padding: var(--spacing-1);
+    background: color-mix(in srgb, var(--color-background-surface) 72%, transparent);
+    border-color: var(--color-border-emphasized);
+    box-shadow: var(--shadow-high), inset 0 var(--border-width) 0 color-mix(in srgb, var(--color-text-primary) 8%, transparent);
+    backdrop-filter: blur(var(--spacing-4));
+    pointer-events: auto;
+  }
+
+  .bottom-nav-link {
+    position: relative;
+    z-index: 1;
+    pointer-events: auto;
+  }
+
+  .bottom-nav-link.is-active {
+    color: var(--color-text-primary);
+    background: color-mix(in srgb, var(--color-accent) 28%, transparent);
+    box-shadow: inset 0 0 0 var(--border-width) color-mix(in srgb, var(--color-accent) 34%, transparent);
+  }
+
+  .drawer-popup {
+    background: color-mix(in srgb, var(--color-background-surface) 96%, transparent);
+    border-color: var(--color-border-emphasized);
+    backdrop-filter: blur(var(--spacing-4));
+  }
+
+  @media (max-width: 30rem) {
+    .hero {
+      min-height: min(62dvh, calc(var(--spacing-10) * 11));
+      margin: var(--spacing-3);
+    }
+
+    .hero-copy {
+      padding: var(--spacing-4);
+    }
+
+    .owner-stats {
+      gap: var(--spacing-2);
+    }
+
+    .owner-stats section {
+      min-height: calc(var(--spacing-10) * 2.5);
+      padding: var(--spacing-3);
+    }
+  }
+}
+
+@layer app {
+  html {
     background: var(--color-background-body);
     color-scheme: dark;
     scroll-padding-block: var(--app-fixed-offset, var(--spacing-10));

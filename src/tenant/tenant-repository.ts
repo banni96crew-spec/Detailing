@@ -17,7 +17,7 @@ function parsePublished(value: PublishedBusinessConfig): PublishedBusinessConfig
 export async function fetchTenant(slug: string): Promise<PublishedBusinessConfig> {
   if (isDemoMode) {
     const response = await fetch(`/generated/${encodeURIComponent(slug)}/runtime.json`, { cache: "no-store" });
-    if (!response.ok) throw new Error("Демонстрационная студия не найдена");
+    if (!response.ok) throw new Error("Студия не найдена");
     const generated = (await response.json()) as PublishedBusinessConfig;
     const override = localStorage.getItem(demoOverrideKey(slug));
     const value = override ? JSON.parse(override) as PublishedBusinessConfig : generated;

@@ -9,12 +9,12 @@
     "description": "Спокойный детейлинг без конвейера: фиксируем состояние автомобиля, согласуем работы и показываем результат.",
     "accent": "#4690FF",
     "logo": "images/logo.svg",
-    "hero": "images/hero.svg"
+    "hero": "images/hero-v2.png"
   },
   "contact": {
     "phone": "+7 900 000-00-01",
     "address": "Москва, Береговой проезд, 5",
-    "directionsUrl": "https://www.openstreetmap.org/search?query=Москва%20Береговой%20проезд%205"
+    "directionsUrl": "https://yandex.ru/maps/?text=Москва%2C%20Береговой%20проезд%2C%205"
   },
   "booking": {
     "slotIntervalMinutes": 30,
@@ -40,6 +40,7 @@
       "key": "deep-wash",
       "name": "Детейлинг-мойка",
       "description": "Тщательная мойка кузова, дисков, проёмов и безопасная сушка.",
+      "image": "images/service-deep-wash-v1.png",
       "priceCents": 650000,
       "durationMinutes": 180,
       "bufferMinutes": 30,
@@ -50,6 +51,7 @@
       "key": "polishing",
       "name": "Восстановительная полировка",
       "description": "Диагностика лака и поэтапная полировка с контролем толщины покрытия.",
+      "image": "images/service-polishing-v1.png",
       "priceCents": 2800000,
       "durationMinutes": 720,
       "bufferMinutes": 60,
@@ -60,6 +62,7 @@
       "key": "ceramic",
       "name": "Керамическая защита",
       "description": "Подготовка кузова и нанесение защитного состава с выдержкой в боксе.",
+      "image": "images/service-ceramic-v1.png",
       "priceCents": 4200000,
       "durationMinutes": 2160,
       "bufferMinutes": 120,
@@ -73,9 +76,9 @@
     { "key": "result", "title": "Результат в деталях", "text": "Показываем выполненные этапы и даём понятные рекомендации по уходу." }
   ],
   "gallery": [
-    { "key": "graphite-coupe", "image": "images/work-1.svg", "caption": "Полировка и защита тёмного кузова" },
-    { "key": "graphite-suv", "image": "images/work-2.svg", "caption": "Комплексная подготовка внедорожника" },
-    { "key": "graphite-interior", "image": "images/work-3.svg", "caption": "Бережная работа с салоном" }
+    { "key": "graphite-coupe", "image": "images/work-1-v2.png", "caption": "Полировка и защита тёмного кузова" },
+    { "key": "graphite-suv", "image": "images/work-2-v2.png", "caption": "Комплексная подготовка внедорожника" },
+    { "key": "graphite-interior", "image": "images/work-3-v2.png", "caption": "Бережная работа с салоном" }
   ],
   "pwa": {
     "name": "GRAPHITE Detailing — запись",

@@ -2,7 +2,7 @@ select public.admin_publish_tenant($json$
 {
   "version":1,"slug":"graphite","status":"preview","timezone":"Europe/Moscow",
   "brand":{"name":"GRAPHITE Detailing","shortName":"GRAPHITE","description":"Спокойный детейлинг без конвейера: фиксируем состояние автомобиля, согласуем работы и показываем результат.","accent":"#4690FF","logo":"images/logo.svg","hero":"images/hero.svg"},
-  "contact":{"phone":"+7 900 000-00-01","address":"Москва, Береговой проезд, 5","directionsUrl":"https://www.openstreetmap.org/search?query=Москва%20Береговой%20проезд%205"},
+  "contact":{"phone":"+7 900 000-00-01","address":"Москва, Береговой проезд, 5","directionsUrl":"https://yandex.ru/maps/?text=Москва%2C%20Береговой%20проезд%2C%205"},
   "booking":{"slotIntervalMinutes":30,"minimumLeadMinutes":120,"horizonDays":45,"cancellationHours":12},
   "hours":[{"weekday":0,"closed":false,"opensAt":"10:00","lastArrivalAt":"18:00"},{"weekday":1,"closed":false,"opensAt":"09:00","lastArrivalAt":"20:00"},{"weekday":2,"closed":false,"opensAt":"09:00","lastArrivalAt":"20:00"},{"weekday":3,"closed":false,"opensAt":"09:00","lastArrivalAt":"20:00"},{"weekday":4,"closed":false,"opensAt":"09:00","lastArrivalAt":"20:00"},{"weekday":5,"closed":false,"opensAt":"09:00","lastArrivalAt":"20:00"},{"weekday":6,"closed":false,"opensAt":"10:00","lastArrivalAt":"18:00"}],
   "resources":[{"key":"detailing-bay-1","name":"Детейлинг-бокс 1","kind":"bay"},{"key":"detailing-bay-2","name":"Детейлинг-бокс 2","kind":"bay"}],
@@ -18,7 +18,7 @@ select public.admin_publish_tenant($json$
 {
   "version":1,"slug":"ember-garage","status":"preview","timezone":"Asia/Yekaterinburg",
   "brand":{"name":"EMBER Garage","shortName":"EMBER","description":"Городской автосервис для понятного обслуживания: диагностика, регламентные работы и честный статус ремонта.","accent":"#FF6B35","logo":"images/logo.svg","hero":"images/hero.svg"},
-  "contact":{"phone":"+7 900 000-00-02","address":"Екатеринбург, улица Монтажников, 24","directionsUrl":"https://www.openstreetmap.org/search?query=Екатеринбург%20Монтажников%2024"},
+  "contact":{"phone":"+7 900 000-00-02","address":"Екатеринбург, улица Монтажников, 24","directionsUrl":"https://yandex.ru/maps/?text=Екатеринбург%2C%20улица%20Монтажников%2C%2024"},
   "booking":{"slotIntervalMinutes":30,"minimumLeadMinutes":60,"horizonDays":30,"cancellationHours":6},
   "hours":[{"weekday":0,"closed":true},{"weekday":1,"closed":false,"opensAt":"08:00","lastArrivalAt":"19:00"},{"weekday":2,"closed":false,"opensAt":"08:00","lastArrivalAt":"19:00"},{"weekday":3,"closed":false,"opensAt":"08:00","lastArrivalAt":"19:00"},{"weekday":4,"closed":false,"opensAt":"08:00","lastArrivalAt":"19:00"},{"weekday":5,"closed":false,"opensAt":"08:00","lastArrivalAt":"19:00"},{"weekday":6,"closed":false,"opensAt":"09:00","lastArrivalAt":"16:00"}],
   "resources":[{"key":"lift-1","name":"Подъёмник 1","kind":"lift"},{"key":"lift-2","name":"Подъёмник 2","kind":"lift"},{"key":"diagnostic-bay","name":"Диагностический пост","kind":"bay"}],

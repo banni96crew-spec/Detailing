@@ -11,8 +11,6 @@ import { formatInTimeZone } from "date-fns-tz";
 import { useState } from "react";
 import { fetchOwnerBookings, fetchOwnerStats, recordOwnerPayment, setOwnerBookingStatus, type OwnerBooking } from "./owner-repository";
 import { useTenant } from "@/tenant/tenant-context";
-import { isDemoMode } from "@/lib/env";
-import { AssistantPanel } from "@/assistant/assistant-panel";
 
 function money(cents: number): string {
   return new Intl.NumberFormat("ru-RU", { style: "currency", currency: "RUB", maximumFractionDigits: 0 }).format(cents / 100);
@@ -48,12 +46,10 @@ export function OwnerDashboardPage() {
   return (
     <Section variant="transparent" padding={4}>
       <VStack as="main" gap={5}>
-        {isDemoMode ? <Banner status="warning" title="Кабинет образца" description="Изменения сохраняются только в этом браузере; реальные уведомления и платежи не отправляются." /> : null}
         <HStack gap={2} wrap="wrap">
           <Button label="Сегодня" variant={period === "today" ? "primary" : "secondary"} onClick={() => setPeriod("today")} />
           <Button label="7 дней" variant={period === "week" ? "primary" : "secondary"} onClick={() => setPeriod("week")} />
           <Button label="Добавить запись" variant="secondary" href={`/s/${tenant.slug}/owner/new`} />
-          <AssistantPanel scope="owner" />
         </HStack>
         {stats.isPending ? <Text role="status">Считаем показатели…</Text> : null}
         {stats.isError ? <Banner status="error" title="Не удалось получить показатели" description={stats.error.message} /> : null}

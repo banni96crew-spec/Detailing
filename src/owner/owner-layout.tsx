@@ -30,7 +30,7 @@ export function OwnerLayout() {
             <HStack gap={2} wrap="wrap">
               <Button label="Записи" variant="ghost" href={`/s/${tenant.slug}/owner/`} />
               <Button label="Настройки" variant="ghost" href={`/s/${tenant.slug}/owner/settings`} />
-              <Button label={isDemoMode ? "Выйти из образца" : "Выйти"} variant="ghost" onClick={() => void logout()} />
+              <Button label="Выйти" variant="ghost" onClick={() => void logout()} />
             </HStack>
           </VStack>
         </header>

@@ -14,7 +14,7 @@
   "contact": {
     "phone": "+7 900 000-00-02",
     "address": "Екатеринбург, улица Монтажников, 24",
-    "directionsUrl": "https://www.openstreetmap.org/search?query=Екатеринбург%20Монтажников%2024"
+    "directionsUrl": "https://yandex.ru/maps/?text=Екатеринбург%2C%20улица%20Монтажников%2C%2024"
   },
   "booking": {
     "slotIntervalMinutes": 30,

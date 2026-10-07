@@ -32,7 +32,24 @@ export function TenantProvider({ slug, children }: { slug: string; children: Rea
         ? defineTheme({
             name: `tenant-${query.data.slug}`,
             extends: neutralTheme,
-            tokens: { "--color-accent": [query.data.brand.accent, query.data.brand.accent] },
+            tokens: {
+              "--color-accent": [query.data.brand.accent, query.data.brand.accent],
+              "--color-on-accent": ["#07111d", "#07111d"],
+              "--color-background-body": ["#07111d", "#07111d"],
+              "--color-background-surface": ["#0d1a29", "#0d1a29"],
+              "--color-background-muted": ["#142232", "#142232"],
+              "--color-background-card": ["#101e2d", "#101e2d"],
+              "--color-text-primary": ["#f5f8fb", "#f5f8fb"],
+              "--color-text-secondary": ["#aab6c3", "#aab6c3"],
+              "--color-border": ["rgba(185, 207, 228, 0.16)", "rgba(185, 207, 228, 0.16)"],
+              "--color-border-emphasized": ["rgba(207, 225, 242, 0.28)", "rgba(207, 225, 242, 0.28)"],
+              "--font-family-body": ["Inter, ui-sans-serif, system-ui, sans-serif", "Inter, ui-sans-serif, system-ui, sans-serif"],
+            },
+            components: {
+              button: {
+                base: { borderRadius: "9999px", fontWeight: "700" },
+              },
+            },
           })
         : neutralTheme,
     [query.data],

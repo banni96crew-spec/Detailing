@@ -55,6 +55,7 @@ export const businessConfigSchema = z
           key: slug,
           name: z.string().min(2).max(100),
           description: z.string().min(10).max(300),
+          image: assetPath.optional(),
           priceCents: z.number().int().positive(),
           durationMinutes: z.number().int().min(15).max(43_200),
           bufferMinutes: z.number().int().min(0).max(1_440),
@@ -128,5 +129,6 @@ export type PublishedBusinessConfig = BusinessConfig & {
     icon512: string;
     maskable512: string;
     gallery: { key: string; image: string; caption: string }[];
+    services: { key: string; image: string }[];
   };
 };

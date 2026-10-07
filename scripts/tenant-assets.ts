@@ -58,6 +58,16 @@ export async function generateTenantAssets(config: BusinessConfig): Promise<Publ
     }),
   );
 
+  const serviceImages = await Promise.all(
+    config.services.map(async (service, index) => {
+      if (!service.image) return null;
+      const filename = `service-${String(index + 1)}.webp`;
+      await renderImage(tenantAssetPath(config, service.image), path.join(assets, filename), 1200, 800);
+      return { key: service.key, image: `/generated/${config.slug}/assets/${filename}` };
+    }),
+  );
+  const services = serviceImages.filter((item): item is { key: string; image: string } => item !== null);
+
   const publicConfig: PublishedBusinessConfig = {
     ...config,
     assets: {
@@ -68,6 +78,7 @@ export async function generateTenantAssets(config: BusinessConfig): Promise<Publ
       icon512: `/generated/${config.slug}/icon-512.png`,
       maskable512: `/generated/${config.slug}/icon-maskable-512.png`,
       gallery,
+      services,
     },
   };
 

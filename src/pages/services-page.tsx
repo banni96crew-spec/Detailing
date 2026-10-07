@@ -16,10 +16,18 @@ export function ServicesPage() {
         <ul className="service-list">
           {tenant.services.map((service) => (
             <li key={service.key} className="service-row">
+              {tenant.assets.services.find((asset) => asset.key === service.key) ? (
+                <img
+                  className="service-image"
+                  src={tenant.assets.services.find((asset) => asset.key === service.key)?.image}
+                  alt={service.name}
+                  loading="lazy"
+                />
+              ) : null}
               <VStack gap={1}>
                 <Heading level={2}>{service.name}</Heading>
                 <Text as="p" color="secondary">{service.description}</Text>
-                <Text weight="semibold">от {(service.priceCents / 100).toLocaleString("ru-RU")} ₽</Text>
+                <Text weight="semibold">{`от\u00a0${(service.priceCents / 100).toLocaleString("ru-RU")}\u00a0₽`}</Text>
                 <Button label="Выбрать" variant="secondary" onClick={() => setSelectedService(service)} />
               </VStack>
             </li>

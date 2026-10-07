@@ -11,7 +11,7 @@ export function isStandalone(): boolean {
 }
 
 export async function enableBookingPush(slug: string, accessToken: string): Promise<void> {
-  if (isDemoMode) throw new Error("В образце уведомления не отправляются");
+  if (isDemoMode) throw new Error("Уведомления сейчас недоступны");
   if (!("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window)) throw new Error("Push-уведомления недоступны в этом браузере");
   if (/iPhone|iPad|iPod/.test(navigator.userAgent) && !isStandalone()) throw new Error("На iPhone сначала добавьте приложение на экран «Домой»");
   const permission = await Notification.requestPermission();

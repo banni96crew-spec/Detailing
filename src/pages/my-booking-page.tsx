@@ -80,13 +80,13 @@ export function MyBookingPage() {
             <dt>Приём</dt><dd>{dateTime(value.startsAt)}</dd>
             <dt>Готовность по плану</dt><dd>{dateTime(value.endsAt)}</dd>
             <dt>Автомобиль</dt><dd>{value.vehicle}</dd>
-            <dt>Стоимость</dt><dd>{(value.priceCents / 100).toLocaleString("ru-RU")} ₽</dd>
+            <dt>Стоимость</dt><dd>{`${(value.priceCents / 100).toLocaleString("ru-RU")}\u00a0₽`}</dd>
           </dl>
         </section>
         {notice ? <Banner status="success" title={notice} isDismissable onDismiss={() => setNotice("")} /> : null}
         {push.isError ? <Banner status="warning" title="Напоминание не включено" description={push.error.message} /> : null}
         {cancel.isError ? <Banner status="error" title="Не удалось отменить запись" description={cancel.error.message} /> : null}
-        <Button label={isDemoMode ? "Напоминания недоступны в образце" : "Напомнить за сутки"} variant="secondary" isDisabled={isDemoMode} isLoading={push.isPending} onClick={() => push.mutate()} />
+        {!isDemoMode ? <Button label="Напомнить за сутки" variant="secondary" isLoading={push.isPending} onClick={() => push.mutate()} /> : null}
         {!isDemoMode ? <Button label="Добавить в календарь" variant="secondary" href={calendarUrl(tenant.slug, token)} /> : null}
         {canCancel ? <Button label="Отменить запись" variant="secondary" isLoading={cancel.isPending} onClick={() => cancel.mutate()} /> : null}
         <Button label="Удалить доступ с устройства" variant="ghost" onClick={() => { clearBookingToken(tenant.slug); setToken(null); }} />

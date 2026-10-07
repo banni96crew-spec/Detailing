@@ -6,13 +6,11 @@ import { Text } from "@astryxdesign/core/Text";
 import { VStack } from "@astryxdesign/core/VStack";
 import { useNavigate } from "react-router-dom";
 import { useTenant } from "@/tenant/tenant-context";
-import { AssistantPanel } from "@/assistant/assistant-panel";
-import { useLiquidGlass } from "@/lib/use-liquid-glass";
+import { CalendarPlusIcon } from "@phosphor-icons/react";
 
 export function HomePage() {
   const tenant = useTenant();
   const navigate = useNavigate();
-  useLiquidGlass(".hero-booking-glass");
   const weekdayNames = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
   return (
     <VStack as="article" gap={6} paddingBlockEnd={10}>
@@ -22,8 +20,8 @@ export function HomePage() {
           <figcaption className="hero-copy">
             <Heading level={1} type="display-2" textWrap="balance">{tenant.brand.name}</Heading>
             <Text as="p" type="large">{tenant.brand.description}</Text>
-            <aside className="hero-booking-glass liquid-glass">
-              <Button label="Записаться" variant="primary" size="lg" width="100%" onClick={() => navigate(`/s/${tenant.slug}/services`)} />
+            <aside className="hero-booking-glass">
+              <Button label="Записаться" icon={<CalendarPlusIcon aria-hidden="true" />} variant="primary" size="lg" width="100%" onClick={() => navigate(`/s/${tenant.slug}/services`)} />
             </aside>
           </figcaption>
         </figure>
@@ -37,13 +35,12 @@ export function HomePage() {
               <li key={service.key} className="service-row">
                 <HStack gap={3} justify="between" align="start">
                   <VStack gap={1}><Heading level={3}>{service.name}</Heading><Text color="secondary">{service.description}</Text></VStack>
-                  <Text weight="semibold">{(service.priceCents / 100).toLocaleString("ru-RU")} ₽</Text>
+                  <Text weight="semibold">{`${(service.priceCents / 100).toLocaleString("ru-RU")}\u00a0₽`}</Text>
                 </HStack>
               </li>
             ))}
           </ul>
           <Button label="Выбрать услугу и время" variant="primary" onClick={() => navigate(`/s/${tenant.slug}/services`)} />
-          <AssistantPanel scope="client" />
         </VStack>
       </Section>
       <Section variant="transparent" padding={4}>
