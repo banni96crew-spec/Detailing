@@ -39,6 +39,9 @@ type Service = PublishedBusinessConfig["services"][number];
 interface BookingDrawerProps {
   tenant: PublishedBusinessConfig;
   service: Service | null;
+  initialDate?: ISODateString;
+  initialStartsAt?: string;
+  initialStep?: number;
   onOpenChange: (open: boolean) => void;
 }
 
@@ -46,11 +49,11 @@ function isoDate(tenant: PublishedBusinessConfig, offset = 0): ISODateString {
   return formatInTimeZone(addDays(new Date(), offset), tenant.timezone, "yyyy-MM-dd") as ISODateString;
 }
 
-export function BookingDrawer({ tenant, service, onOpenChange }: BookingDrawerProps) {
+export function BookingDrawer({ tenant, service, initialDate, initialStartsAt, initialStep = 0, onOpenChange }: BookingDrawerProps) {
   const open = service !== null;
-  const [step, setStep] = useState(0);
-  const [date, setDate] = useState<ISODateString>(() => isoDate(tenant));
-  const [startsAt, setStartsAt] = useState("");
+  const [step, setStep] = useState(initialStep);
+  const [date, setDate] = useState<ISODateString>(() => initialDate ?? isoDate(tenant));
+  const [startsAt, setStartsAt] = useState(initialStartsAt ?? "");
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [vehicle, setVehicle] = useState("");
@@ -69,11 +72,12 @@ export function BookingDrawer({ tenant, service, onOpenChange }: BookingDrawerPr
   }, [open, onOpenChange]);
 
   useEffect(() => {
-    setStep(0);
-    setStartsAt("");
+    setStep(initialStep);
+    setDate(initialDate ?? isoDate(tenant));
+    setStartsAt(initialStartsAt ?? "");
     setValidationError("");
     idempotencyKey.current = crypto.randomUUID();
-  }, [service?.key]);
+  }, [initialDate, initialStartsAt, initialStep, service?.key, tenant]);
 
   const slots = useQuery({
     queryKey: ["slots", tenant.slug, service?.key, date],
@@ -117,8 +121,8 @@ export function BookingDrawer({ tenant, service, onOpenChange }: BookingDrawerPr
 
   return (
     <Drawer open={open} onOpenChange={(value) => (value ? undefined : closeSheet())}>
-      <DrawerContent aria-describedby="booking-description">
-        <DrawerHeader>
+      <DrawerContent className="graphite-booking-drawer" aria-describedby="booking-description">
+        <DrawerHeader className="graphite-booking-drawer-header">
           <DrawerTitle>Запись в студию</DrawerTitle>
           <DrawerDescription id="booking-description">
             {service ? `${service.name} · шаг ${step + 1} из 3` : "Выберите услугу"}
@@ -170,7 +174,7 @@ export function BookingDrawer({ tenant, service, onOpenChange }: BookingDrawerPr
             </VStack>
           ) : null}
           {step === 2 && service && selectedSlot ? (
-            <VStack as="section" gap={3} className="booking-summary">
+            <VStack as="section" gap={3} className="graphite-booking-review">
               <Heading level={3}>Проверьте запись</Heading>
               <dl>
                 <dt>Услуга</dt><dd>{service.name}</dd>
@@ -184,7 +188,7 @@ export function BookingDrawer({ tenant, service, onOpenChange }: BookingDrawerPr
             </VStack>
           ) : null}
         </VStack>
-        <DrawerFooter>
+        <DrawerFooter className="graphite-booking-drawer-footer">
           <HStack gap={2} justify="between">
             {step > 0 ? <Button label="Назад" variant="secondary" onClick={() => setStep((value) => value - 1)} /> : <DrawerClose render={<Button label="Закрыть" variant="secondary" />} />}
             {step === 0 ? <Button label="Продолжить" variant="primary" isDisabled={!startsAt} onClick={() => setStep(1)} /> : null}

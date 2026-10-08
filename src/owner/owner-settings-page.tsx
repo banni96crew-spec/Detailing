@@ -20,28 +20,30 @@ export function OwnerSettingsPage() {
   const [phone, setPhone] = useState(tenant.contact.phone);
   const [address, setAddress] = useState(tenant.contact.address);
   const [directionsUrl, setDirectionsUrl] = useState(tenant.contact.directionsUrl);
-  const [accentColor, setAccentColor] = useState(tenant.brand.accent);
+  const accentColor = tenant.brand.accent;
   const profile = useMutation({
     mutationFn: () => updateProfile(tenant, { name, shortName, description, phone, address, directionsUrl, accentColor }),
     onSuccess: () => void queryClient.invalidateQueries({ queryKey: ["tenant", tenant.slug] }),
   });
   return (
-    <Section variant="transparent" padding={4}>
-      <VStack as="main" gap={8}>
-        <VStack as="section" gap={3}>
+    <Section className="owner-settings-section" variant="transparent" padding={0}>
+      <VStack as="main" className="owner-settings-page" gap={5}>
+        <VStack as="section" className="owner-studio-section" gap={3}>
           <Heading level={2}>Студия</Heading>
           <TextInput label="Название" value={name} onChange={setName} width="100%" />
           <TextInput label="Короткое название" value={shortName} onChange={setShortName} width="100%" />
           <TextArea label="Описание" value={description} onChange={setDescription} rows={4} maxLength={300} width="100%" />
           <TextInput label="Телефон" value={phone} onChange={setPhone} width="100%" />
           <TextInput label="Адрес" value={address} onChange={setAddress} width="100%" />
-          <TextInput label="Ссылка на маршрут" value={directionsUrl} onChange={setDirectionsUrl} width="100%" />
-          <TextInput label="Акцент #RRGGBB" value={accentColor} onChange={setAccentColor} width="100%" />
+          <TextInput label="Ссылка Яндекс Карт" value={directionsUrl} onChange={setDirectionsUrl} width="100%" />
           {profile.isError ? <Banner status="error" title="Настройки не сохранены" description={profile.error.message} /> : null}
           {profile.isSuccess ? <Banner status="success" title="Основные настройки сохранены" isDismissable /> : null}
-          <Button label="Сохранить студию" variant="primary" isLoading={profile.isPending} onClick={() => profile.mutate()} />
-          <BrandAssetEditor tenant={tenant} assetKey="logo" label="Логотип" />
-          <BrandAssetEditor tenant={tenant} assetKey="hero" label="Главное фото" />
+          <Button className="owner-settings-save" label="Сохранить изменения" variant="primary" isLoading={profile.isPending} onClick={() => profile.mutate()} />
+          <VStack className="owner-media-settings" gap={3}>
+            <Heading level={3}>Изображения</Heading>
+            <BrandAssetEditor tenant={tenant} assetKey="logo" label="Логотип" />
+            <BrandAssetEditor tenant={tenant} assetKey="hero" label="Главное фото" />
+          </VStack>
         </VStack>
         <VStack as="section" gap={3}><Heading level={2}>Услуги</Heading><ul className="settings-list">{tenant.services.map((service) => <ServiceEditor key={service.key} tenant={tenant} service={service} />)}</ul></VStack>
         <VStack as="section" gap={3}><Heading level={2}>Посты и боксы</Heading><ul className="settings-list">{tenant.resources.map((resource) => <ResourceEditor key={resource.key} tenant={tenant} resource={resource} />)}</ul></VStack>

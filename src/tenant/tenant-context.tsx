@@ -47,7 +47,7 @@ export function TenantProvider({ slug, children }: { slug: string; children: Rea
             },
             components: {
               button: {
-                base: { borderRadius: "9999px", fontWeight: "700" },
+                base: { borderRadius: query.data.slug === "graphite" ? "10px" : "9999px", fontWeight: "700" },
               },
             },
           })

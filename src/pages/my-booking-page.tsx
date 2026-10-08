@@ -1,5 +1,9 @@
+import { Banner } from "@astryxdesign/core/Banner";
+import { Button } from "@astryxdesign/core/Button";
 import { Heading } from "@astryxdesign/core/Heading";
+import { HStack } from "@astryxdesign/core/HStack";
 import { Section } from "@astryxdesign/core/Section";
+import { StatusDot } from "@astryxdesign/core/StatusDot";
 import { Text } from "@astryxdesign/core/Text";
 import { VStack } from "@astryxdesign/core/VStack";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -19,6 +23,15 @@ const statusLabels = {
   completed: "Завершена",
   cancelled: "Отменена",
   no_show: "Не состоялась",
+} as const;
+
+const statusVariants = {
+  confirmed: "accent",
+  accepted: "warning",
+  ready: "success",
+  completed: "neutral",
+  cancelled: "error",
+  no_show: "error",
 } as const;
 
 export function MyBookingPage() {
@@ -54,45 +67,67 @@ export function MyBookingPage() {
 
   if (!token) {
     return (
-      <Section variant="transparent" padding={4}>
-        <VStack gap={3} paddingBlockEnd={10}>
+      <VStack as="article" className="graphite-page graphite-booking-page" gap={0}>
+        <Section className="graphite-booking-header" variant="transparent" padding={0}>
           <Heading level={1}>Моя запись</Heading>
-          <Banner status="info" title="Записи на этом устройстве нет" description="Выберите услугу и подтвердите время — запись появится здесь без регистрации." />
-          <Button label="Выбрать услугу" variant="primary" href={`/s/${tenant.slug}/services`} />
-        </VStack>
-      </Section>
+        </Section>
+        <Section className="graphite-booking-empty" variant="transparent" padding={0}>
+          <VStack gap={3}>
+            <Heading level={2}>Записей пока нет</Heading>
+            <Text as="p">Выберите услугу и подтвердите время — запись появится здесь без регистрации.</Text>
+            <Button className="graphite-booking-primary" label="Выбрать услугу" variant="primary" href={`/s/${tenant.slug}/services`} />
+          </VStack>
+        </Section>
+      </VStack>
     );
   }
   if (booking.isPending) return <LoadingState label="Загружаем запись" />;
   if (booking.isError) return <ErrorState title="Не удалось открыть запись" detail={booking.error.message} onRetry={() => void booking.refetch()} />;
+
   const value = booking.data;
   const dateTime = (date: string) => new Intl.DateTimeFormat("ru-RU", { timeZone: tenant.timezone, dateStyle: "long", timeStyle: "short" }).format(new Date(date));
   const canCancel = !["cancelled", "completed", "no_show"].includes(value.status);
 
   return (
-    <Section variant="transparent" padding={4}>
-      <VStack gap={4} paddingBlockEnd={10}>
-        <Heading level={1}>Моя запись</Heading>
-        <Text as="p" color="secondary">Статус: {statusLabels[value.status]}</Text>
-        <section className="booking-summary" aria-label="Детали записи">
-          <dl>
-            <dt>Услуга</dt><dd>{value.service.name}</dd>
-            <dt>Приём</dt><dd>{dateTime(value.startsAt)}</dd>
-            <dt>Готовность по плану</dt><dd>{dateTime(value.endsAt)}</dd>
-            <dt>Автомобиль</dt><dd>{value.vehicle}</dd>
-            <dt>Стоимость</dt><dd>{`${(value.priceCents / 100).toLocaleString("ru-RU")}\u00a0₽`}</dd>
-          </dl>
-        </section>
-        {notice ? <Banner status="success" title={notice} isDismissable onDismiss={() => setNotice("")} /> : null}
-        {push.isError ? <Banner status="warning" title="Напоминание не включено" description={push.error.message} /> : null}
-        {cancel.isError ? <Banner status="error" title="Не удалось отменить запись" description={cancel.error.message} /> : null}
-        {!isDemoMode ? <Button label="Напомнить за сутки" variant="secondary" isLoading={push.isPending} onClick={() => push.mutate()} /> : null}
-        {!isDemoMode ? <Button label="Добавить в календарь" variant="secondary" href={calendarUrl(tenant.slug, token)} /> : null}
-        {canCancel ? <Button label="Отменить запись" variant="secondary" isLoading={cancel.isPending} onClick={() => cancel.mutate()} /> : null}
-        <Button label="Удалить доступ с устройства" variant="ghost" onClick={() => { clearBookingToken(tenant.slug); setToken(null); }} />
-      </VStack>
-    </Section>
+    <VStack as="article" className="graphite-page graphite-booking-page" gap={0}>
+      <Section className="graphite-booking-header" variant="transparent" padding={0}>
+        <VStack gap={2}>
+          <Heading level={1}>Моя запись</Heading>
+          <HStack className="graphite-booking-status" gap={2} align="center">
+            <StatusDot variant={statusVariants[value.status]} label={statusLabels[value.status]} />
+            <Text>{statusLabels[value.status]}</Text>
+          </HStack>
+        </VStack>
+      </Section>
+
+      <Section className="graphite-booking-content" variant="transparent" padding={0}>
+        <VStack gap={4}>
+          <section className="graphite-booking-summary" aria-label="Детали записи">
+            <VStack gap={3}>
+              <Heading level={2}>{value.service.name}</Heading>
+              <Text as="p" className="graphite-booking-arrival">{dateTime(value.startsAt)}</Text>
+              <dl>
+                <section><dt>Готовность по плану</dt><dd>{dateTime(value.endsAt)}</dd></section>
+                <section><dt>Автомобиль</dt><dd>{value.vehicle}</dd></section>
+                <section><dt>Стоимость</dt><dd>{`${(value.priceCents / 100).toLocaleString("ru-RU")}\u00a0₽`}</dd></section>
+              </dl>
+            </VStack>
+          </section>
+
+          {notice ? <Banner status="success" title={notice} isDismissable onDismiss={() => setNotice("")} /> : null}
+          {push.isError ? <Banner status="warning" title="Напоминание не включено" description={push.error.message} /> : null}
+          {cancel.isError ? <Banner status="error" title="Не удалось отменить запись" description={cancel.error.message} /> : null}
+
+          <section className="graphite-booking-actions" aria-label="Действия с записью">
+            <VStack gap={2}>
+              {!isDemoMode ? <Button label="Напомнить за сутки" variant="secondary" isLoading={push.isPending} onClick={() => push.mutate()} /> : null}
+              {!isDemoMode ? <Button label="Добавить в календарь" variant="secondary" href={calendarUrl(tenant.slug, token)} /> : null}
+              {canCancel ? <Button className="graphite-booking-secondary" label="Отменить запись" variant="secondary" isLoading={cancel.isPending} onClick={() => cancel.mutate()} /> : null}
+              <Button className="graphite-booking-remove" label="Удалить доступ с устройства" variant="ghost" onClick={() => { clearBookingToken(tenant.slug); setToken(null); }} />
+            </VStack>
+          </section>
+        </VStack>
+      </Section>
+    </VStack>
   );
 }
-import { Banner } from "@astryxdesign/core/Banner";
-import { Button } from "@astryxdesign/core/Button";
