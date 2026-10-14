@@ -2332,7 +2332,7 @@
   .owner-settings-page .astryx-text-area {
     width: 100%;
     color: var(--graphite-color-text-primary);
-    background: color-mix(in srgb, var(--graphite-color-surface) 88%, transparent);
+    background: color-mix(in srgb, var(--graphite-color-surface) 82%, transparent);
     border: 1px solid transparent;
     border-radius: var(--graphite-radius-large);
     box-shadow: none;
@@ -2403,7 +2403,7 @@
 
   .owner-settings-page .settings-list {
     overflow: clip;
-    background: color-mix(in srgb, var(--graphite-color-surface) 88%, transparent);
+    background: color-mix(in srgb, var(--graphite-color-surface) 82%, transparent);
     border-radius: var(--graphite-radius-large);
   }
 
@@ -2467,6 +2467,59 @@
   .bottom-nav-link.is-active {
     color: var(--color-text-primary);
     background: color-mix(in srgb, var(--color-accent) 22%, transparent);
+  }
+
+  .astryx-app-shell:has(.graphite-page),
+  .booking-time-page,
+  .graphite-owner-layout {
+    background-color: var(--graphite-color-bg-bottom);
+    background-image: linear-gradient(180deg, var(--graphite-color-bg-top) 0%, var(--graphite-color-bg-base) 38%, var(--graphite-color-bg-bottom) 100%);
+    background-size: 100% 100dvh;
+    background-repeat: no-repeat;
+  }
+
+  body:has(.graphite-page) #astryx-app-shell-main {
+    background: transparent;
+  }
+
+  :where(
+    .graphite-home-service-list,
+    .graphite-home-hours,
+    .graphite-service-link,
+    .graphite-work-card,
+    .graphite-contact-address,
+    .graphite-booking-summary,
+    .graphite-booking-review
+  ) {
+    background: color-mix(in srgb, var(--graphite-color-surface) 82%, transparent);
+    border-radius: var(--graphite-radius-large);
+    box-shadow: none;
+  }
+
+  .graphite-service-link,
+  .graphite-service-card {
+    border-radius: var(--graphite-radius-large);
+  }
+
+  .graphite-service-card img {
+    border-radius: var(--graphite-radius-large) var(--graphite-radius-large) 0 0;
+  }
+
+  .graphite-home-page .graphite-home-secondary.astryx-button,
+  .graphite-contact-page .graphite-contact-route.astryx-button,
+  .graphite-booking-page .graphite-booking-secondary.astryx-button,
+  .graphite-booking-drawer-footer .astryx-button[data-variant="secondary"] {
+    color: var(--graphite-color-text-primary);
+    background: color-mix(in srgb, var(--graphite-color-surface) 92%, var(--graphite-color-text-secondary) 8%);
+    border: 0;
+    border-radius: var(--graphite-radius-control);
+    box-shadow: none;
+  }
+
+  .astryx-app-shell:has(.graphite-page) .bottom-nav {
+    background: color-mix(in srgb, var(--graphite-color-surface) 72%, transparent);
+    border: 0;
+    box-shadow: none;
   }
 
   @media (prefers-reduced-motion: reduce) {
