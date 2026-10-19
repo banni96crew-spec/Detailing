@@ -8,9 +8,11 @@ import { ErrorState, LoadingState } from "@/components/app-state";
 
 const TenantContext = createContext<PublishedBusinessConfig | null>(null);
 
-function registerTenantWorker(slug: string): void {
+function registerTenantWorker(): void {
   if (!import.meta.env.PROD || !("serviceWorker" in navigator)) return;
-  void navigator.serviceWorker.register(`/s/${slug}/sw.js`, { scope: `/s/${slug}/` });
+  // Скопированный в /s/<slug>/ Worker получает неверные относительные пути
+  // к ресурсам и оставляет navigator.serviceWorker.ready в ожидании.
+  void navigator.serviceWorker.register("/sw.js", { scope: "/" });
 }
 
 export function TenantProvider({ slug, children }: { slug: string; children: ReactNode }) {
@@ -24,8 +26,8 @@ export function TenantProvider({ slug, children }: { slug: string; children: Rea
   });
 
   useEffect(() => {
-    registerTenantWorker(slug);
-  }, [slug]);
+    registerTenantWorker();
+  }, []);
   const theme = useMemo(
     () =>
       query.data
