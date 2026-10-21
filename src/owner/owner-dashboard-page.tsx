@@ -11,6 +11,7 @@ import { formatInTimeZone } from "date-fns-tz";
 import { useState } from "react";
 import { fetchOwnerBookings, fetchOwnerStats, recordOwnerPayment, setOwnerBookingStatus, type OwnerBooking } from "./owner-repository";
 import { useTenant } from "@/tenant/tenant-context";
+import { isDemoMode } from "@/lib/env";
 
 function money(cents: number): string {
   return new Intl.NumberFormat("ru-RU", { style: "currency", currency: "RUB", maximumFractionDigits: 0 }).format(cents / 100);
@@ -27,7 +28,7 @@ const statusLabel: Record<string, string> = {
 
 export function OwnerDashboardPage() {
   const tenant = useTenant();
-  const [period, setPeriod] = useState<"today" | "week">("today");
+  const [period, setPeriod] = useState<"today" | "week">(isDemoMode ? "week" : "today");
   const queryClient = useQueryClient();
   const today = formatInTimeZone(new Date(), tenant.timezone, "yyyy-MM-dd");
   const to = period === "week" ? formatInTimeZone(addDays(new Date(), 6), tenant.timezone, "yyyy-MM-dd") : today;
@@ -109,14 +110,18 @@ export function OwnerDashboardPage() {
                         </VStack>
                         <Text className="owner-booking-time" weight="semibold">{dateTime(booking.startsAt)}</Text>
                       </HStack>
-                      <Text className={`owner-booking-status is-${booking.status}`}>{statusLabel[booking.status] ?? booking.status}</Text>
+                      <Text className={`owner-booking-status is-${booking.status}`}>{booking.origin === "showcase" ? "Демонстрационная запись" : statusLabel[booking.status] ?? booking.status}</Text>
                       <Text className="owner-booking-customer">{booking.customerName} · {booking.customerPhone}</Text>
-                      <Text className="owner-booking-payment-line" color="secondary">Получено: {money(booking.paidCents)} из {money(booking.priceCents)}</Text>
-                      <HStack className="owner-booking-actions" gap={2} wrap="wrap">
-                        {next ? <Button className="owner-booking-next" label={next.label} variant="secondary" isLoading={update.isPending} onClick={() => update.mutate({ bookingId: booking.bookingId, status: next.status })} /> : null}
-                        {booking.paidCents < booking.priceCents && booking.status !== "cancelled" ? <Button className="owner-booking-payment" label="Внести оплату" variant="secondary" isLoading={payment.isPending} onClick={() => payment.mutate({ bookingId: booking.bookingId, cents: booking.priceCents - booking.paidCents })} /> : null}
-                        {booking.status !== "cancelled" && booking.status !== "completed" ? <Button className="owner-booking-cancel" label="Отменить" variant="ghost" onClick={() => update.mutate({ bookingId: booking.bookingId, status: "cancelled" })} /> : null}
-                      </HStack>
+                      {booking.origin === "showcase" ? <Text className="owner-booking-payment-line" color="secondary">Витринная запись не влияет на показатели и свободное время.</Text> : (
+                        <>
+                          <Text className="owner-booking-payment-line" color="secondary">Получено: {money(booking.paidCents)} из {money(booking.priceCents)}</Text>
+                          <HStack className="owner-booking-actions" gap={2} wrap="wrap">
+                            {next ? <Button className="owner-booking-next" label={next.label} variant="secondary" isLoading={update.isPending} onClick={() => update.mutate({ bookingId: booking.bookingId, status: next.status })} /> : null}
+                            {booking.paidCents < booking.priceCents && booking.status !== "cancelled" ? <Button className="owner-booking-payment" label="Внести оплату" variant="secondary" isLoading={payment.isPending} onClick={() => payment.mutate({ bookingId: booking.bookingId, cents: booking.priceCents - booking.paidCents })} /> : null}
+                            {booking.status !== "cancelled" && booking.status !== "completed" ? <Button className="owner-booking-cancel" label="Отменить" variant="ghost" onClick={() => update.mutate({ bookingId: booking.bookingId, status: "cancelled" })} /> : null}
+                          </HStack>
+                        </>
+                      )}
                     </VStack>
                   </li>
                 );

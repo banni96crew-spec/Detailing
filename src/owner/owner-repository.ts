@@ -2,7 +2,8 @@ import { z } from "zod";
 import type { PublishedBusinessConfig } from "@/domain/business-schema";
 import { browserEnvironment, isDemoMode } from "@/lib/env";
 import { getSupabase } from "@/lib/supabase";
-import { createBooking, demoRecords, saveDemoRecords } from "@/booking/booking-repository";
+import { createBooking } from "@/booking/booking-repository";
+import { mergeAndSaveDemoRecords, readDemoPayments, readDemoRecords, saveDemoPayments } from "@/booking/demo-booking-store";
 import type { CreateBookingInput } from "@/booking/booking-types";
 import { formatInTimeZone } from "date-fns-tz";
 
@@ -10,6 +11,7 @@ export const ownerBookingSchema = z.object({
   bookingId: z.uuid(), status: z.string(), startsAt: z.string(), endsAt: z.string(),
   priceCents: z.number(), customerName: z.string(), customerPhone: z.string(), vehicle: z.string(),
   notes: z.string().nullable().optional(), serviceName: z.string(), resourceName: z.string(), paidCents: z.number(),
+  origin: z.enum(["showcase", "user"]).default("user"),
 });
 export const statsSchema = z.object({
   timezone: z.string(), from: z.string(), to: z.string(), arrivals: z.number(), completedOrders: z.number(), receivedCents: z.number(),
@@ -17,12 +19,6 @@ export const statsSchema = z.object({
 
 export type OwnerBooking = z.infer<typeof ownerBookingSchema>;
 export type OwnerStats = z.infer<typeof statsSchema>;
-
-const demoPaymentsKey = (slug: string) => `demo-payments:${slug}`;
-
-function demoPayments(slug: string): Record<string, number> {
-  try { return JSON.parse(localStorage.getItem(demoPaymentsKey(slug)) ?? "{}") as Record<string, number>; } catch { return {}; }
-}
 
 async function ownerFetch(path: string, init?: RequestInit): Promise<unknown> {
   const { data } = await getSupabase().auth.getSession();
@@ -43,8 +39,8 @@ async function ownerFetch(path: string, init?: RequestInit): Promise<unknown> {
 
 export async function fetchOwnerBookings(tenant: PublishedBusinessConfig, from: string, to: string): Promise<OwnerBooking[]> {
   if (isDemoMode) {
-    const payments = demoPayments(tenant.slug);
-    return demoRecords(tenant.slug)
+    const payments = readDemoPayments(tenant.slug);
+    return readDemoRecords(tenant.slug)
       .filter((item) => {
         const localDate = formatInTimeZone(new Date(item.startsAt), tenant.timezone, "yyyy-MM-dd");
         return localDate >= from && localDate <= to;
@@ -54,6 +50,7 @@ export async function fetchOwnerBookings(tenant: PublishedBusinessConfig, from: 
         priceCents: item.priceCents, customerName: item.customerName, customerPhone: item.customerPhone,
         vehicle: item.vehicle, notes: item.notes, serviceName: item.service.name, resourceName: item.resource.name,
         paidCents: payments[item.bookingId] ?? 0,
+        origin: item.origin,
       }));
   }
   const payload = await ownerFetch(`/tenant/${encodeURIComponent(tenant.slug)}/bookings?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`);
@@ -65,9 +62,9 @@ export async function fetchOwnerStats(tenant: PublishedBusinessConfig, from: str
     const rows = await fetchOwnerBookings(tenant, from, to);
     return {
       timezone: tenant.timezone, from, to,
-      arrivals: rows.filter((item) => item.status !== "cancelled").length,
-      completedOrders: rows.filter((item) => item.status === "completed").length,
-      receivedCents: rows.reduce((sum, item) => sum + item.paidCents, 0),
+      arrivals: rows.filter((item) => item.origin !== "showcase" && item.status !== "cancelled").length,
+      completedOrders: rows.filter((item) => item.origin !== "showcase" && item.status === "completed").length,
+      receivedCents: rows.filter((item) => item.origin !== "showcase").reduce((sum, item) => sum + item.paidCents, 0),
     };
   }
   return statsSchema.parse(await ownerFetch(`/tenant/${encodeURIComponent(tenant.slug)}/stats?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`));
@@ -75,11 +72,11 @@ export async function fetchOwnerStats(tenant: PublishedBusinessConfig, from: str
 
 export async function setOwnerBookingStatus(tenant: PublishedBusinessConfig, bookingId: string, status: string): Promise<void> {
   if (isDemoMode) {
-    const records = demoRecords(tenant.slug);
+    const records = readDemoRecords(tenant.slug);
     const record = records.find((item) => item.bookingId === bookingId);
     if (!record) throw new Error("Запись не найдена");
-    record.status = z.enum(["confirmed", "accepted", "ready", "completed", "cancelled", "no_show"]).parse(status);
-    saveDemoRecords(tenant.slug, records);
+    if (record.origin === "showcase") throw new Error("Витринную запись нельзя изменять");
+    mergeAndSaveDemoRecords(tenant.slug, [{ ...record, status: z.enum(["confirmed", "accepted", "ready", "completed", "cancelled", "no_show"]).parse(status) }]);
     return;
   }
   await ownerFetch(`/tenant/${encodeURIComponent(tenant.slug)}/bookings/${bookingId}/status`, {
@@ -89,9 +86,12 @@ export async function setOwnerBookingStatus(tenant: PublishedBusinessConfig, boo
 
 export async function recordOwnerPayment(tenant: PublishedBusinessConfig, bookingId: string, amountCents: number): Promise<void> {
   if (isDemoMode) {
-    const values = demoPayments(tenant.slug);
+    const record = readDemoRecords(tenant.slug).find((item) => item.bookingId === bookingId);
+    if (!record) throw new Error("Запись не найдена");
+    if (record.origin === "showcase") throw new Error("Витринной записи нельзя назначить оплату");
+    const values = readDemoPayments(tenant.slug);
     values[bookingId] = (values[bookingId] ?? 0) + amountCents;
-    localStorage.setItem(demoPaymentsKey(tenant.slug), JSON.stringify(values));
+    saveDemoPayments(tenant.slug, values);
     return;
   }
   await ownerFetch(`/tenant/${encodeURIComponent(tenant.slug)}/bookings/${bookingId}/payments`, {

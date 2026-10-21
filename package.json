@@ -19,12 +19,13 @@
     "test:e2e": "playwright test",
     "test:db": "supabase test db",
     "check:functions": "deno check --config supabase/functions/deno.json supabase/functions/public-api/index.ts supabase/functions/owner-api/index.ts supabase/functions/assistant/index.ts supabase/functions/notification-dispatch/index.ts",
-    "check": "pnpm lint && pnpm typecheck && pnpm check:functions && pnpm test && pnpm build",
+    "check": "pnpm lint && pnpm typecheck && pnpm check:functions && pnpm test && pnpm tenant:demo-preflight && pnpm build",
     "tenant:new": "tsx scripts/tenant-new.ts",
     "tenant:validate": "tsx scripts/tenant-validate.ts",
     "tenant:assets": "tsx scripts/tenant-assets.ts",
     "tenant:publish": "tsx scripts/tenant-publish.ts",
-    "tenant:verify": "tsx scripts/tenant-verify.ts"
+    "tenant:verify": "tsx scripts/tenant-verify.ts",
+    "tenant:demo-preflight": "tsx scripts/tenant-demo-preflight.ts"
   },
   "dependencies": {
     "@astryxdesign/cli": "0.6.5",

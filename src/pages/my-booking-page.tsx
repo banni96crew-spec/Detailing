@@ -10,11 +10,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { cancelBooking, calendarUrl, fetchBooking } from "@/booking/booking-repository";
-import { clearBookingToken, getBookingToken, saveBookingToken } from "@/booking/booking-storage";
+import { findDemoRecordByToken } from "@/booking/demo-booking-store";
 import { enableBookingPush } from "@/booking/push";
 import { ErrorState, LoadingState } from "@/components/app-state";
 import { isDemoMode } from "@/lib/env";
-import { useTenant } from "@/tenant/tenant-context";
+import { useDemoBooking, useTenant } from "@/tenant/tenant-context";
 
 const statusLabels = {
   confirmed: "Подтверждена",
@@ -36,19 +36,19 @@ const statusVariants = {
 
 export function MyBookingPage() {
   const tenant = useTenant();
+  const demoBooking = useDemoBooking();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [token, setToken] = useState(() => searchParams.get("access") ?? getBookingToken(tenant.slug));
   const [notice, setNotice] = useState("");
   const cancellationKey = useRef(crypto.randomUUID());
   const queryClient = useQueryClient();
+  const token = demoBooking.bookingToken;
 
   useEffect(() => {
     const access = searchParams.get("access");
     if (!access) return;
-    saveBookingToken(tenant.slug, access);
-    setToken(access);
+    void demoBooking.setBookingToken(access);
     setSearchParams({}, { replace: true });
-  }, [searchParams, setSearchParams, tenant.slug]);
+  }, [demoBooking, searchParams, setSearchParams]);
 
   const booking = useQuery({
     queryKey: ["booking", tenant.slug, token],
@@ -63,6 +63,13 @@ export function MyBookingPage() {
   const push = useMutation({
     mutationFn: () => enableBookingPush(tenant.slug, token!),
     onSuccess: () => setNotice("Напоминание включено"),
+  });
+  const reset = useMutation({
+    mutationFn: () => demoBooking.resetDemo(),
+    onSuccess: () => {
+      setNotice("Демонстрация обновлена");
+      void queryClient.invalidateQueries({ queryKey: ["booking", tenant.slug] });
+    },
   });
 
   if (!token) {
@@ -85,6 +92,7 @@ export function MyBookingPage() {
   if (booking.isError) return <ErrorState title="Не удалось открыть запись" detail={booking.error.message} onRetry={() => void booking.refetch()} />;
 
   const value = booking.data;
+  const isShowcase = isDemoMode && findDemoRecordByToken(tenant.slug, token)?.origin === "showcase";
   const dateTime = (date: string) => new Intl.DateTimeFormat("ru-RU", { timeZone: tenant.timezone, dateStyle: "long", timeStyle: "short" }).format(new Date(date));
   const canCancel = !["cancelled", "completed", "no_show"].includes(value.status);
 
@@ -97,6 +105,7 @@ export function MyBookingPage() {
             <StatusDot variant={statusVariants[value.status]} label={statusLabels[value.status]} />
             <Text>{statusLabels[value.status]}</Text>
           </HStack>
+          {isShowcase ? <Text color="secondary">Демонстрационная запись</Text> : null}
         </VStack>
       </Section>
 
@@ -122,8 +131,9 @@ export function MyBookingPage() {
             <VStack gap={2}>
               {!isDemoMode ? <Button label="Напомнить за сутки" variant="secondary" isLoading={push.isPending} onClick={() => push.mutate()} /> : null}
               {!isDemoMode ? <Button label="Добавить в календарь" variant="secondary" href={calendarUrl(tenant.slug, token)} /> : null}
-              {canCancel ? <Button className="graphite-booking-secondary" label="Отменить запись" variant="secondary" isLoading={cancel.isPending} onClick={() => cancel.mutate()} /> : null}
-              <Button className="graphite-booking-remove" label="Удалить доступ с устройства" variant="ghost" onClick={() => { clearBookingToken(tenant.slug); setToken(null); }} />
+              {canCancel && !isShowcase ? <Button className="graphite-booking-secondary" label="Отменить запись" variant="secondary" isLoading={cancel.isPending} onClick={() => cancel.mutate()} /> : null}
+              {isDemoMode ? <Button className="graphite-booking-remove" label="Сбросить демонстрацию" variant="ghost" isLoading={reset.isPending} onClick={() => reset.mutate()} /> : null}
+              {!isDemoMode ? <Button className="graphite-booking-remove" label="Удалить доступ с устройства" variant="ghost" onClick={() => void demoBooking.setBookingToken(null)} /> : null}
             </VStack>
           </section>
         </VStack>

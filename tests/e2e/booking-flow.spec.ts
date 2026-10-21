@@ -1,16 +1,38 @@
 import { expect, test } from "@playwright/test";
 
+test("чистое или повреждённое хранилище всегда открывает витринную запись", async ({ page, context }) => {
+  await page.goto("/s/graphite/services");
+  await page.evaluate(() => localStorage.clear());
+  await page.goto("/s/graphite/my-booking");
+  await expect(page.getByRole("heading", { name: "Моя запись" })).toBeVisible();
+  await expect(page.getByText("Демонстрационная запись")).toBeVisible();
+  await expect(page.getByText("Демонстрационный автомобиль")).toBeVisible();
+
+  await page.evaluate(() => localStorage.setItem("tenant-booking-token:graphite", "missing-token"));
+  await page.reload();
+  await expect(page.getByText("Демонстрационная запись")).toBeVisible();
+
+  await page.evaluate(() => localStorage.setItem("demo-bookings:graphite", "broken-json"));
+  await page.reload();
+  await expect(page.getByText("Демонстрационная запись")).toBeVisible();
+
+  const secondPage = await context.newPage();
+  await secondPage.goto("/s/graphite/owner/");
+  await expect(secondPage.getByText("Демонстрационная запись")).toBeVisible();
+  await secondPage.close();
+
+  await page.getByRole("button", { name: "Сбросить демонстрацию" }).click();
+  await expect(page.getByText("Демонстрационная запись")).toBeVisible();
+  await page.close();
+});
+
 test("клиент записывается, а владелец видит запись", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/s/graphite/services");
   await page.evaluate(() => localStorage.clear());
   await page.reload();
-  await page.getByRole("listitem").filter({ hasText: "Детейлинг-мойка" }).getByRole("button", { name: "Выбрать" }).click();
-
-  const tomorrow = new Date(Date.now() + 86_400_000).toISOString().slice(0, 10);
-  const nativeDate = page.locator('input[type="date"]');
-  if (await nativeDate.count()) await nativeDate.fill(tomorrow);
-  const availableSlot = page.locator(".slot-grid button:not([disabled])").first();
+  await page.getByRole("link", { name: /Детейлинг-мойка/ }).click();
+  const availableSlot = page.locator(".booking-slot:not([disabled])").first();
   await expect(availableSlot).toBeVisible();
   await availableSlot.click();
   await page.getByRole("button", { name: "Продолжить" }).click();
